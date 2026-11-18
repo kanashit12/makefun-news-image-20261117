@@ -11,9 +11,14 @@ HERE = Path(__file__).resolve().parent
 
 
 def main():
+    src = HERE / "news.png"
+    if not src.is_file():
+        raise FileNotFoundError(f"bundled image missing: {src}")
+    if src.stat().st_size > 1024 * 1024:
+        raise ValueError("bundled image exceeds the 1 MiB limit")
     out = Path("/output/entry.png")
     out.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(HERE / "news.png", out)
+    shutil.copyfile(src, out)
 
 
 if __name__ == "__main__":
